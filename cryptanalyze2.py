@@ -101,18 +101,23 @@ sorted_let_freq_cipher = sorted(let_freq_cipher.items(), key=operator.itemgetter
 data = list(data)
 key = np.array(sorted_let_freq_cipher)[:,0]
 all_letters = np.array(sorted_let_freq)[:,0]
+
 for i in range(len(data)):
+	### Skip Text
 	if data[i] in [' ', ',', '.',"'",'"','-',':',';','?','(',')','!','[',']','$','{','}','/','*','~','_','%','#','=','@','&'] or data[i].isdigit():
 		continue
+	### Maps AllLetters and Key Together
 	index = np.where(key == data[i])
 	data[i] = all_letters[index][0]
-
+### Adds Space between Data
 data  = ''.join(data)
 print data
 key_correct = []
 checked_words = []
 visual_correct = []
 all_letters = np.array(sorted_let_freq)[:,0]
+
+### Searches for ciphertext for words
 while(1):
 	word_flag = False
 	for wordi,word in enumerate(data.split(" ")):
@@ -121,6 +126,7 @@ while(1):
 			if char not in visual_correct:
 				flag = True
 		if len(word) > 8 and d.check(word) == True and flag == True and word not in checked_words:
+			### Grabs Context around suspect word in Ciphertext
 			try:
 				print data.split(" ")[wordi-3]
 			except:
@@ -155,6 +161,7 @@ while(1):
 				for let in word:
 					if let in [' ', ',', '.',"'",'"','-',':',';','?','(',')','!','[',']','$','{','}','/','*','~','_','%','#','=','@','&'] or let.isdigit():
 						continue
+					### Stores Correct Letters
 					index1 = np.where(np.array(all_letters) == let)[0][0]
 					let2 = key[index1]
 					visual_correct.append(let)
@@ -171,6 +178,7 @@ while(1):
 				data  = ''.join(data)
 				print data
 			elif user_check in ['swap']:
+				### Allows Two Letters in Key to be Swapped
 				let1 = raw_input("Enter the first letter to swap")
 				let2 = raw_input("Enter the second letter to swap")
 				index1 = np.where(np.array(all_letters) == let1)[0][0]
@@ -179,7 +187,7 @@ while(1):
 				temp = key[index1]
 				key[index1] = key[index2]
 				key[index2] = temp
-			
+	### Randomly Swap Unfixed Letters in Key
 	for i in range(13):
 		ind1 = randint(0,25)
 		while(key[ind1] in key_correct):
